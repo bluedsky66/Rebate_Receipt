@@ -15,7 +15,7 @@ from us_rebate_receipts.src.engine.renderer import LayoutRenderer
 from us_rebate_receipts.src.printers.printers import PngPrinter, DirectPrinter
 
 # Load configs
-def load_configs():
+def load_configs_main():
     with open("us_rebate_receipts/config/target_skus.json") as f:
         target_skus = [TargetSKU(**t) for t in json.load(f)["target_skus"]]
 
@@ -25,22 +25,34 @@ def load_configs():
     with open("us_rebate_receipts/config/tax_rates.json") as f:
         tax_rates = {k: TaxRate(**v) for k, v in json.load(f).items()}
 
-    stores = ["walmart", "target", "costco", "cvs", "kroger", "walgreens"]
+    import glob
+    stores = [os.path.basename(os.path.dirname(p)) for p in glob.glob("us_rebate_receipts/config/stores/*/profile.json")]
+
     layouts = {}
     tax_profiles = {}
     logo_paths = {}
+    store_profiles = {}
 
     for store in stores:
+        from us_rebate_receipts.src.models.core import StoreProfileConfig
+        with open(f"us_rebate_receipts/config/stores/{store}/profile.json") as f:
+            store_profiles[store] = StoreProfileConfig(**json.load(f))
         with open(f"us_rebate_receipts/config/stores/{store}/layout.json") as f:
             layouts[store] = StoreLayoutConfig(**json.load(f))
         with open(f"us_rebate_receipts/config/stores/{store}/tax_profile.json") as f:
             tax_profiles[store] = json.load(f)
         logo_paths[store] = f"us_rebate_receipts/config/stores/{store}/logo.png"
 
-    return target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths
+    return target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths, store_profiles
+
+import subprocess
+import sys
 
 def main():
-    target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths = load_configs()
+    if not os.path.exists("us_rebate_receipts/config/target_skus.json"):
+        subprocess.run([sys.executable, "refactor_configs.py"], check=True)
+
+    target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths, store_profiles = load_configs_main()
 
     # Initialize Engines
     cart_builder = CartBuilder(target_skus, general_skus)
@@ -77,6 +89,12 @@ def main():
         # 3. Match Payment
         payment = payment_matcher.generate_payment(config, cart)
 
+        # Pick address
+        from us_rebate_receipts.src.models.core import StoreAddress
+        prof = store_profiles.get(cart.store_id)
+        addrs = prof.addresses.get(cart.state_code, [])
+        address = StoreAddress(**random.choice(addrs)) if addrs else StoreAddress(store_number="000", street="TEST", city="TEST", state="XX", zip="000")
+
         # 4. Get Txn Lock
         # Pre-allocate VOID/RETURN
         register_id = random.choice(config.register_pool)
@@ -98,7 +116,8 @@ def main():
             payment=payment,
             register_id=register_id,
             txn_seq=txn_seq,
-            timestamp=ts_str
+            timestamp=ts_str,
+            address=address
         )
 
         # 5. Sanity Check

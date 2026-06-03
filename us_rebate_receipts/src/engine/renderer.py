@@ -48,11 +48,21 @@ class LayoutRenderer:
 
         # 2. Header
         if layout.header.show_name:
-            self._draw_text(d, receipt.cart.store_id.upper(), page_width, y, align=layout.header.alignment)
+            store_display = receipt.cart.store_id.upper()
+            if store_display == "SAMS_CLUB": store_display = "SAM'S CLUB"
+            self._draw_text(d, store_display.replace("_", " "), page_width, y, align=layout.header.alignment)
             y += line_height
 
         if layout.header.show_address:
-            for line in layout.header.address_template.split('\n'):
+            addr = receipt.address
+            address_str = layout.header.address_template.format(
+                store_number=addr.store_number,
+                street=addr.street,
+                city=addr.city,
+                state=addr.state,
+                zip=addr.zip
+            )
+            for line in address_str.split('\n'):
                 self._draw_text(d, line, page_width, y, align=layout.header.alignment)
                 y += line_height
 
@@ -60,27 +70,41 @@ class LayoutRenderer:
 
         # 3. Items
         for item in receipt.cart.items:
-            # Name
-            self._draw_text(d, item.sku.name, page_width, y, align=layout.item_line.name_align)
-            if layout.item_line.show_upc:
-                y += line_height
-                self._draw_text(d, item.sku.upc, page_width, y, align=layout.item_line.name_align)
-
-            y += line_height
-
-            qty_str = layout.item_line.qty_template.format(qty=item.qty, unit_price=item.unit_price)
+            # Format tax indicator
+            indicator = layout.item_line.tax_indicator_taxable if item.is_taxable else layout.item_line.tax_indicator_exempt
             line_tot = str(item.line_total)
+            if indicator:
+                line_tot += f" {indicator}"
 
-            # Add tax label if taxable
-            if item.is_taxable and receipt.cart.store_id == "walmart":
-                line_tot += " T"
-            elif item.is_taxable and receipt.cart.store_id in ["cvs", "walgreens"]:
-                line_tot += " T"
+            if layout.item_line.display_mode == "compact":
+                # Name and total on same line, qty skipped if 1
+                name_str = item.sku.name.upper()[:26]
+                if item.qty > 1:
+                    qty_str = f"{item.qty} @ {item.unit_price}"
+                    self._draw_text(d, name_str, page_width, y, align=layout.item_line.name_align)
+                    y += line_height
+                    self._draw_text(d, qty_str, page_width, y, align=layout.item_line.name_align)
+                else:
+                    self._draw_text(d, name_str, page_width, y, align=layout.item_line.name_align)
 
-            self._draw_text(d, qty_str, page_width, y, align=layout.item_line.name_align)
-            self._draw_text(d, line_tot, page_width, y, align=layout.item_line.price_align)
+                self._draw_text(d, line_tot, page_width, y, align=layout.item_line.price_align)
+                y += line_height
 
-            y += line_height
+            else: # detailed
+                # Name
+                self._draw_text(d, item.sku.name, page_width, y, align=layout.item_line.name_align)
+                if layout.item_line.show_upc:
+                    y += line_height
+                    self._draw_text(d, item.sku.upc, page_width, y, align=layout.item_line.name_align)
+
+                y += line_height
+
+                qty_str = layout.item_line.qty_template.format(qty=item.qty, unit_price=item.unit_price)
+
+                self._draw_text(d, qty_str, page_width, y, align=layout.item_line.name_align)
+                self._draw_text(d, line_tot, page_width, y, align=layout.item_line.price_align)
+
+                y += line_height
 
         y += line_height
 
@@ -120,12 +144,21 @@ class LayoutRenderer:
             self._draw_text(d, pay_label, page_width, y, align="left")
             self._draw_text(d, pay_str, page_width, y, align="right")
             y += line_height
-            self._draw_text(d, "CHANGE DUE", page_width, y, align="left")
-            self._draw_text(d, "0.00", page_width, y, align="right")
+            for footer_line in layout.payment_line.payment_footer_lines:
+                if "CHANGE" in footer_line.upper():
+                    line = footer_line.format(change="0.00")
+                    self._draw_text(d, line.split("{")[0].strip(), page_width, y, align="left") # Rough formatting
+                    self._draw_text(d, "0.00", page_width, y, align="right")
+                    y += line_height
         else:
             pay_str = layout.payment_line.mask_format.format(type=receipt.payment.type, last4=receipt.payment.last4)
             self._draw_text(d, pay_label, page_width, y, align="left")
             self._draw_text(d, pay_str, page_width, y, align="right")
+            y += line_height
+            for footer_line in layout.payment_line.payment_footer_lines:
+                if "APPROVED" in footer_line.upper() or "AUTH" in footer_line.upper():
+                    self._draw_text(d, footer_line, page_width, y, align="center")
+                    y += line_height
 
         y += line_height * 2
 
@@ -134,9 +167,16 @@ class LayoutRenderer:
         self._draw_text(d, term_str, page_width, y, align="center")
         y += line_height
 
-        txn_str = layout.footer.txn_format.format(store_id=receipt.cart.store_id, register=receipt.register_id, seq=receipt.txn_seq, timestamp=receipt.timestamp)
-        self._draw_text(d, txn_str, page_width, y, align="center")
-        y += line_height
+        txn_str = layout.footer.txn_format.format(
+            store_number=receipt.address.store_number,
+            store_id=receipt.cart.store_id,
+            register=receipt.register_id,
+            seq=receipt.txn_seq,
+            timestamp=receipt.timestamp
+        )
+        for line in txn_str.split('\n'):
+            self._draw_text(d, line, page_width, y, align="center")
+            y += line_height
 
         # Crop to actual height
         img = img.crop((0, 0, page_width, y + 20))
@@ -207,24 +247,50 @@ class LayoutRenderer:
 
         # 2. Header
         if layout.header.show_name:
-            out.extend(receipt.cart.store_id.upper().encode() + b'\n')
+            store_display = receipt.cart.store_id.upper()
+            if store_display == "SAMS_CLUB": store_display = "SAM'S CLUB"
+            out.extend(store_display.replace("_", " ").encode() + b'\n')
         if layout.header.show_address:
-            out.extend(layout.header.address_template.encode() + b'\n')
+            addr = receipt.address
+            address_str = layout.header.address_template.format(
+                store_number=addr.store_number,
+                street=addr.street,
+                city=addr.city,
+                state=addr.state,
+                zip=addr.zip
+            )
+            out.extend(address_str.encode() + b'\n')
         out.extend(b'\n')
 
         # 3. Items
         out.extend(b'\x1b\x61\x00') # Left
         for item in receipt.cart.items:
-            out.extend(item.sku.name.encode() + b'\n')
-            if layout.item_line.show_upc:
-                out.extend(item.sku.upc.encode() + b'\n')
-            qty_str = layout.item_line.qty_template.format(qty=item.qty, unit_price=item.unit_price)
+            indicator = layout.item_line.tax_indicator_taxable if item.is_taxable else layout.item_line.tax_indicator_exempt
             line_tot = str(item.line_total)
+            if indicator:
+                line_tot += f" {indicator}"
 
-            # Simple padding for right align
-            spaces = 48 - len(qty_str) - len(line_tot)
-            if spaces < 1: spaces = 1
-            out.extend(qty_str.encode() + (b' ' * spaces) + line_tot.encode() + b'\n')
+            if layout.item_line.display_mode == "compact":
+                name_str = item.sku.name.upper()[:26]
+                if item.qty > 1:
+                    qty_str = f"{item.qty} @ {item.unit_price}"
+                    out.extend(name_str.encode() + b'\n')
+                    spaces = 48 - len(qty_str) - len(line_tot)
+                    if spaces < 1: spaces = 1
+                    out.extend(qty_str.encode() + (b' ' * spaces) + line_tot.encode() + b'\n')
+                else:
+                    spaces = 48 - len(name_str) - len(line_tot)
+                    if spaces < 1: spaces = 1
+                    out.extend(name_str.encode() + (b' ' * spaces) + line_tot.encode() + b'\n')
+            else:
+                out.extend(item.sku.name.encode() + b'\n')
+                if layout.item_line.show_upc:
+                    out.extend(item.sku.upc.encode() + b'\n')
+                qty_str = layout.item_line.qty_template.format(qty=item.qty, unit_price=item.unit_price)
+
+                spaces = 48 - len(qty_str) - len(line_tot)
+                if spaces < 1: spaces = 1
+                out.extend(qty_str.encode() + (b' ' * spaces) + line_tot.encode() + b'\n')
 
         out.extend(b'\n')
         out.extend(layout.total_section.separator.encode() + b'\n')
@@ -243,18 +309,39 @@ class LayoutRenderer:
         # 5. Payment
         if receipt.payment.type == "CASH":
             pay_str = layout.payment_line.cash_label
+            pay_spaces = 48 - len(layout.payment_line.label) - len(pay_str)
+            out.extend(layout.payment_line.label.encode() + (b' ' * pay_spaces) + pay_str.encode() + b'\n')
+
+            for footer_line in layout.payment_line.payment_footer_lines:
+                if "CHANGE" in footer_line.upper():
+                    line = footer_line.format(change="0.00")
+                    lbl = line.split("{")[0].strip()
+                    sps = 48 - len(lbl) - 4
+                    out.extend(lbl.encode() + (b' ' * sps) + b'0.00\n')
         else:
             pay_str = layout.payment_line.mask_format.format(type=receipt.payment.type, last4=receipt.payment.last4)
+            pay_spaces = 48 - len(layout.payment_line.label) - len(pay_str)
+            out.extend(layout.payment_line.label.encode() + (b' ' * pay_spaces) + pay_str.encode() + b'\n')
 
-        pay_spaces = 48 - len(layout.payment_line.label) - len(pay_str)
-        out.extend(layout.payment_line.label.encode() + (b' ' * pay_spaces) + pay_str.encode() + b'\n')
+            for footer_line in layout.payment_line.payment_footer_lines:
+                if "APPROVED" in footer_line.upper() or "AUTH" in footer_line.upper():
+                    out.extend(b'\x1b\x61\x01') # Center
+                    out.extend(footer_line.encode() + b'\n')
+                    out.extend(b'\x1b\x61\x00') # Left
+
         out.extend(b'\n')
 
         # 6. Footer
         out.extend(b'\x1b\x61\x01') # Center
         term_str = layout.footer.terminal_id_format.format(register=receipt.register_id)
         out.extend(term_str.encode() + b'\n')
-        txn_str = layout.footer.txn_format.format(store_id=receipt.cart.store_id, register=receipt.register_id, seq=receipt.txn_seq, timestamp=receipt.timestamp)
+        txn_str = layout.footer.txn_format.format(
+            store_number=receipt.address.store_number,
+            store_id=receipt.cart.store_id,
+            register=receipt.register_id,
+            seq=receipt.txn_seq,
+            timestamp=receipt.timestamp
+        )
         out.extend(txn_str.encode() + b'\n')
 
         # Cut paper

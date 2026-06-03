@@ -13,3 +13,7 @@ us_rebate_receipts/output/
 test_txn*.db
 .coverage
 .pytest_cache/
+test_txn*.db*
+us_rebate_receipts/config/stores/
+us_rebate_receipts/config/general_skus.json
+us_rebate_receipts/config/target_skus.json

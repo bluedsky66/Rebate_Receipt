@@ -18,6 +18,10 @@ def test_skus():
             category="Household", affinity_tags=["laundry", "fabric_care"], weight=100
         ),
         GeneralSKU(
+            sku_id="G1_2", upc="222_2", name="Downy 2", base_price="5.99",
+            category="Household", affinity_tags=["laundry", "fabric_care"], weight=100
+        ),
+        GeneralSKU(
             sku_id="G2", upc="333", name="Diamond Ring", base_price="999.99",
             category="Jewelry", affinity_tags=["jewelry"], weight=100
         )
@@ -29,12 +33,12 @@ def test_cart_builder_affinity_pass(test_skus):
     builder = CartBuilder(targets, generals)
 
     config = RebateJobConfig(
-        target_skus=["T1"], filler_strategy="smart", filler_count_range=(1, 1), affinity_enforce=True,
+        target_skus=["T1"], filler_strategy="smart", filler_count_range=(2, 2), affinity_enforce=True,
         output_format="png", count=1
     )
 
     cart = builder.build_cart(config)
-    assert len(cart.items) == 2
+    assert len(cart.items) == 3
     assert "laundry" in cart.scene_anchor_tags
     names = [i.sku.name for i in cart.items]
     assert "Tide" in names
@@ -46,9 +50,9 @@ def test_cart_builder_affinity_reject(test_skus):
     builder = CartBuilder(targets, [generals[1]])
 
     config = RebateJobConfig(
-        target_skus=["T1"], filler_strategy="smart", filler_count_range=(1, 1), affinity_enforce=True,
+        target_skus=["T1"], filler_strategy="smart", filler_count_range=(2, 2), affinity_enforce=True,
         output_format="png", count=1
     )
 
-    with pytest.raises(ValueError, match="Scene pool empty"):
+    with pytest.raises(ValueError, match="场景池商品不足"):
         builder.build_cart(config)

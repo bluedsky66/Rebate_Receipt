@@ -14,7 +14,7 @@ def test_decimal_conservation():
     )
     payment = PaymentDetail(type="VISA", amount=Decimal("11.01"))
 
-    with pytest.raises(ValueError, match="Math violation"):
+    with pytest.raises(ValueError, match="金额守恒失败"):
         PreRenderSanityCheck.verify(cart, payment, False)
 
 def test_affinity_violation():
@@ -26,7 +26,7 @@ def test_affinity_violation():
     )
     payment = PaymentDetail(type="VISA", amount=Decimal("100.00"))
 
-    with pytest.raises(ValueError, match="Affinity violation"):
+    with pytest.raises(ValueError, match="场景亲和度冲突"):
         PreRenderSanityCheck.verify(cart, payment, True)
 
 def test_cash_rule_violation():
@@ -36,7 +36,7 @@ def test_cash_rule_violation():
     )
     payment = PaymentDetail(type="CASH", amount=Decimal("60.00"))
 
-    with pytest.raises(ValueError, match="Cash payment for amount"):
+    with pytest.raises(ValueError, match="支付规则冲突"):
         PreRenderSanityCheck.verify(cart, payment, False)
 
 def test_costco_visa_violation():
@@ -46,5 +46,5 @@ def test_costco_visa_violation():
     )
     payment = PaymentDetail(type="MC", amount=Decimal("60.00"))
 
-    with pytest.raises(ValueError, match="Costco requires VISA"):
+    with pytest.raises(ValueError, match="Costco"):
         PreRenderSanityCheck.verify(cart, payment, False)

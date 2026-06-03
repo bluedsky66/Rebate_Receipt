@@ -77,6 +77,12 @@ class RebateJobConfig(BaseModel):
     output_format: Literal["png", "direct_print"] = "png"
     count: int = 1
 
+    # Time settings
+    time_mode: Literal["recent", "fixed", "range"] = "recent"
+    time_fixed: Optional[str] = None # ISO format
+    time_range_start: Optional[str] = None # ISO format
+    time_range_end: Optional[str] = None # ISO format
+
 class CartItem(BaseModel):
     sku: SKUBase
     qty: int
@@ -99,6 +105,25 @@ class PaymentDetail(BaseModel):
     amount: Decimal
     last4: Optional[str] = None
 
+class StoreAddress(BaseModel):
+    store_number: str
+    street: str
+    city: str
+    state: str
+    zip: str
+
+class StoreProfileConfig(BaseModel):
+    store_id: str
+    name: str
+    region_whitelist: List[str]
+    addresses: dict # state -> List[StoreAddress]
+    layout_id: str
+    logo_path: str
+    tax_profile_id: str
+    register_pool: List[str]
+    register_mode: str
+    store_type: str
+
 class ReceiptData(BaseModel):
     job_id: str
     cart: ShoppingCart
@@ -106,6 +131,7 @@ class ReceiptData(BaseModel):
     register_id: str
     txn_seq: int
     timestamp: str # ISO 8601 or similar formatted time string
+    address: StoreAddress
 
 class HeaderConfig(BaseModel):
     alignment: str
@@ -114,11 +140,14 @@ class HeaderConfig(BaseModel):
     address_template: str
 
 class ItemLineConfig(BaseModel):
+    display_mode: Literal["detailed", "compact"] = "detailed"
     name_align: str
     price_align: str
     price_offset: int
     qty_template: str
     show_upc: bool
+    tax_indicator_taxable: str = "T"
+    tax_indicator_exempt: str = ""
 
 class TaxLineFormat(BaseModel):
     mode: str
@@ -139,6 +168,7 @@ class PaymentLineConfig(BaseModel):
     mask_format: str
     cash_label: str
     store_specific: PaymentStoreSpecific
+    payment_footer_lines: List[str] = Field(default_factory=list)
 
 class TotalSectionConfig(BaseModel):
     subtotal_label: str

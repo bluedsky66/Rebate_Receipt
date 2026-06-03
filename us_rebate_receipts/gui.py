@@ -8,13 +8,13 @@ from PyQt6.QtWidgets import (
     QLabel, QComboBox, QSpinBox, QDoubleSpinBox, QCheckBox,
     QPushButton, QListWidget, QListWidgetItem, QAbstractItemView,
     QMessageBox, QSplitter, QScrollArea, QGroupBox, QFormLayout,
-    QMenuBar, QMenu, QDialog, QDialogButtonBox, QLineEdit
+    QMenuBar, QMenu, QDialog, QDialogButtonBox, QLineEdit, QDateTimeEdit,
+    QStackedWidget
 )
 from PyQt6.QtGui import QPixmap, QImage, QAction
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QDateTime
 
-from us_rebate_receipts.src.models.core import RebateJobConfig
-from us_rebate_receipts.main import load_configs
+from us_rebate_receipts.src.models.core import RebateJobConfig, StoreAddress, StoreProfileConfig
 from us_rebate_receipts.src.engine.cart_builder import CartBuilder
 from us_rebate_receipts.src.engine.tax_engine import TaxEngine
 from us_rebate_receipts.src.engine.payment_matcher import PaymentMatcher
@@ -22,11 +22,45 @@ from us_rebate_receipts.src.engine.txn_lock import RegisterAwareTxnLock
 from us_rebate_receipts.src.engine.sanity_checker import PreRenderSanityCheck
 from us_rebate_receipts.src.engine.renderer import LayoutRenderer
 from us_rebate_receipts.src.printers.printers import PngPrinter, DirectPrinter
+from us_rebate_receipts.src.engine.time_utils import generate_timestamp
+
+from us_rebate_receipts.src.models.core import TargetSKU, GeneralSKU, TaxRate, StoreLayoutConfig
+
+def load_configs():
+    with open("us_rebate_receipts/config/target_skus.json") as f:
+        target_skus = [TargetSKU(**t) for t in json.load(f)["target_skus"]]
+
+    with open("us_rebate_receipts/config/general_skus.json") as f:
+        general_skus = [GeneralSKU(**g) for g in json.load(f)["general_skus"]]
+
+    with open("us_rebate_receipts/config/tax_rates.json") as f:
+        tax_rates = {k: TaxRate(**v) for k, v in json.load(f).items()}
+
+    import glob
+    stores = [os.path.basename(os.path.dirname(p)) for p in glob.glob("us_rebate_receipts/config/stores/*/profile.json")]
+
+    layouts = {}
+    tax_profiles = {}
+    logo_paths = {}
+    store_profiles = {}
+
+    for store in stores:
+        with open(f"us_rebate_receipts/config/stores/{store}/profile.json") as f:
+            store_profiles[store] = StoreProfileConfig(**json.load(f))
+        with open(f"us_rebate_receipts/config/stores/{store}/layout.json") as f:
+            layouts[store] = StoreLayoutConfig(**json.load(f))
+        with open(f"us_rebate_receipts/config/stores/{store}/tax_profile.json") as f:
+            tax_profiles[store] = json.load(f)
+        logo_paths[store] = f"us_rebate_receipts/config/stores/{store}/logo.png"
+
+    return target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths, store_profiles
+
+import os
 
 class PreviewDialog(QDialog):
     def __init__(self, pixmap, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Receipt Preview")
+        self.setWindowTitle("收据预览")
         self.setMinimumSize(450, 600)
 
         layout = QVBoxLayout(self)
@@ -48,7 +82,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("US Rebate Receipt Generator")
-        self.setMinimumSize(1000, 700)
+        self.setMinimumSize(1000, 750)
 
         self.txn_lock = RegisterAwareTxnLock()
 
@@ -58,31 +92,37 @@ class MainWindow(QMainWindow):
 
     def create_menu(self):
         menubar = self.menuBar()
-        file_menu = menubar.addMenu("File")
+        file_menu = menubar.addMenu("文件")
 
-        exit_act = QAction("Exit", self)
+        exit_act = QAction("退出", self)
         exit_act.triggered.connect(self.close)
         file_menu.addAction(exit_act)
 
-        config_menu = menubar.addMenu("Config")
-        reload_act = QAction("Reload JSONs", self)
+        config_menu = menubar.addMenu("配置")
+        reload_act = QAction("重新加载所有配置", self)
         reload_act.triggered.connect(self.reload_data)
         config_menu.addAction(reload_act)
 
     def load_data(self):
         try:
-            self.target_skus, self.general_skus, self.tax_rates, self.layouts, self.tax_profiles, self.logo_paths = load_configs()
+            # Check if configs exist. If not, auto-generate them
+            if not os.path.exists("us_rebate_receipts/config/target_skus.json"):
+                # Dynamically run setup if missing
+                import subprocess
+                subprocess.run([sys.executable, "refactor_configs.py"], check=True)
+
+            self.target_skus, self.general_skus, self.tax_rates, self.layouts, self.tax_profiles, self.logo_paths, self.store_profiles = load_configs()
             self.cart_builder = CartBuilder(self.target_skus, self.general_skus)
             self.tax_engine = TaxEngine(self.tax_rates, self.tax_profiles)
             self.payment_matcher = PaymentMatcher(self.layouts)
             self.renderer = LayoutRenderer(self.layouts, self.logo_paths)
         except Exception as e:
-            QMessageBox.critical(self, "Load Error", str(e))
+            QMessageBox.critical(self, "加载错误", f"Failed to load or generate configs: {str(e)}")
 
     def reload_data(self):
         self.load_data()
         self.populate_lists()
-        QMessageBox.information(self, "Success", "Configurations reloaded.")
+        QMessageBox.information(self, "成功", "配置已重新加载。")
 
     def init_ui(self):
         central = QWidget()
@@ -92,7 +132,6 @@ class MainWindow(QMainWindow):
         splitter = QSplitter(Qt.Orientation.Horizontal)
         main_layout.addWidget(splitter)
 
-        # Left Panel - Config
         left_panel = QWidget()
         left_layout = QVBoxLayout(left_panel)
         scroll = QScrollArea()
@@ -105,85 +144,134 @@ class MainWindow(QMainWindow):
         self.lst_targets = QListWidget()
         self.lst_targets.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
         self.lst_targets.setMinimumHeight(100)
-        form.addRow("Target SKUs:", self.lst_targets)
+        form.addRow("目标商品:", self.lst_targets)
 
         self.cb_qty_mode = QComboBox()
-        self.cb_qty_mode.addItems(["fixed", "range"])
-        form.addRow("Target Qty Mode:", self.cb_qty_mode)
+        self.cb_qty_mode.addItems(["固定", "区间"])
+        form.addRow("目标数量模式:", self.cb_qty_mode)
 
-        self.sp_qty = QSpinBox()
-        self.sp_qty.setRange(1, 100)
-        form.addRow("Target Qty (Fixed/Max):", self.sp_qty)
+        self.sp_qty_fixed = QSpinBox()
+        self.sp_qty_fixed.setRange(1, 100)
+
+        self.sp_qty_min = QSpinBox()
+        self.sp_qty_min.setRange(1, 100)
+        self.sp_qty_max = QSpinBox()
+        self.sp_qty_max.setRange(1, 100)
+        self.sp_qty_max.setValue(2)
+
+        self.qty_widget = QStackedWidget()
+        w1 = QWidget()
+        l1 = QHBoxLayout(w1); l1.setContentsMargins(0,0,0,0)
+        l1.addWidget(self.sp_qty_fixed)
+        self.qty_widget.addWidget(w1)
+
+        w2 = QWidget()
+        l2 = QHBoxLayout(w2); l2.setContentsMargins(0,0,0,0)
+        l2.addWidget(self.sp_qty_min)
+        l2.addWidget(QLabel("-"))
+        l2.addWidget(self.sp_qty_max)
+        self.qty_widget.addWidget(w2)
+
+        form.addRow("目标数量 (固定/最大):", self.qty_widget)
+        self.cb_qty_mode.currentTextChanged.connect(self.on_qty_mode_changed)
 
         # Fillers
         self.cb_filler_strategy = QComboBox()
-        self.cb_filler_strategy.addItems(["smart", "random", "none"])
-        form.addRow("Filler Strategy:", self.cb_filler_strategy)
+        self.cb_filler_strategy.addItems(["智能关联", "随机", "不凑单"])
+        form.addRow("凑单策略:", self.cb_filler_strategy)
 
         self.sp_filler_min = QSpinBox()
+        self.sp_filler_min.setRange(2, 50)
         self.sp_filler_max = QSpinBox()
+        self.sp_filler_max.setRange(2, 50)
         self.sp_filler_max.setValue(5)
 
         filler_layout = QHBoxLayout()
         filler_layout.addWidget(self.sp_filler_min)
         filler_layout.addWidget(QLabel("-"))
         filler_layout.addWidget(self.sp_filler_max)
-        form.addRow("Filler Count Range:", filler_layout)
+        form.addRow("凑单数量范围:", filler_layout)
 
-        self.chk_affinity = QCheckBox("Enforce Affinity Tags")
+        self.chk_affinity = QCheckBox("强制场景关联")
         self.chk_affinity.setChecked(True)
         form.addRow("", self.chk_affinity)
 
         # Store & State
-        self.lst_stores = QListWidget()
-        self.lst_stores.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-        self.lst_stores.setMinimumHeight(80)
-        form.addRow("Store Filter:", self.lst_stores)
-
         self.lst_states = QListWidget()
         self.lst_states.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
         self.lst_states.setMinimumHeight(80)
-        form.addRow("State Filter:", self.lst_states)
+        self.lst_states.itemSelectionChanged.connect(self.on_state_selected)
+        form.addRow("州/省筛选:", self.lst_states)
+
+        self.lst_stores = QListWidget()
+        self.lst_stores.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.lst_stores.setMinimumHeight(80)
+        form.addRow("商家筛选:", self.lst_stores)
 
         # Registers
         self.le_registers = QLineEdit("01,02,03,04,05")
-        form.addRow("Register Pool:", self.le_registers)
+        form.addRow("收银台池:", self.le_registers)
 
         self.cb_reg_mode = QComboBox()
-        self.cb_reg_mode.addItems(["random", "round_robin", "fixed"])
-        form.addRow("Register Mode:", self.cb_reg_mode)
+        self.cb_reg_mode.addItems(["随机", "轮询", "固定"])
+        form.addRow("收银台模式:", self.cb_reg_mode)
 
         self.sp_void = QDoubleSpinBox()
         self.sp_void.setRange(0.0, 0.3)
         self.sp_void.setSingleStep(0.01)
         self.sp_void.setValue(0.05)
-        form.addRow("Void Ratio:", self.sp_void)
+        form.addRow("作废比例:", self.sp_void)
 
         self.sp_return = QDoubleSpinBox()
         self.sp_return.setRange(0.0, 0.3)
         self.sp_return.setSingleStep(0.01)
         self.sp_return.setValue(0.02)
-        form.addRow("Return Ratio:", self.sp_return)
+        form.addRow("退货比例:", self.sp_return)
+
+        # Time Settings Group
+        time_group = QGroupBox("时间设置")
+        time_layout = QFormLayout(time_group)
+        self.cb_time_mode = QComboBox()
+        self.cb_time_mode.addItems(["最近", "固定", "区间"])
+        time_layout.addRow("时间模式:", self.cb_time_mode)
+
+        self.dt_fixed = QDateTimeEdit(QDateTime.currentDateTime())
+        self.dt_fixed.setCalendarPopup(True)
+        self.dt_start = QDateTimeEdit(QDateTime.currentDateTime().addDays(-7))
+        self.dt_start.setCalendarPopup(True)
+        self.dt_end = QDateTimeEdit(QDateTime.currentDateTime())
+        self.dt_end.setCalendarPopup(True)
+
+        self.lbl_recent_hint = QLabel("自动生成过去 7 天内的随机时间")
+
+        self.time_stack = QStackedWidget()
+        t1 = QWidget(); tl1 = QVBoxLayout(t1); tl1.addWidget(self.lbl_recent_hint); tl1.setContentsMargins(0,0,0,0); self.time_stack.addWidget(t1)
+        t2 = QWidget(); tl2 = QFormLayout(t2); tl2.addRow("固定时间:", self.dt_fixed); tl2.setContentsMargins(0,0,0,0); self.time_stack.addWidget(t2)
+        t3 = QWidget(); tl3 = QFormLayout(t3); tl3.addRow("起始时间:", self.dt_start); tl3.addRow("结束时间:", self.dt_end); tl3.setContentsMargins(0,0,0,0); self.time_stack.addWidget(t3)
+
+        time_layout.addRow(self.time_stack)
+        self.cb_time_mode.currentTextChanged.connect(self.on_time_mode_changed)
+        form.addRow(time_group)
 
         # Payment
         self.cb_payment = QComboBox()
-        self.cb_payment.addItems(["auto", "cash", "card"])
-        form.addRow("Payment Mode:", self.cb_payment)
+        self.cb_payment.addItems(["自动", "现金", "刷卡"])
+        form.addRow("支付方式:", self.cb_payment)
 
         # Output
         self.cb_output = QComboBox()
-        self.cb_output.addItems(["png", "direct_print"])
-        form.addRow("Output Format:", self.cb_output)
+        self.cb_output.addItems(["保存为图片(PNG)", "直接打印"])
+        form.addRow("输出格式:", self.cb_output)
 
         self.sp_count = QSpinBox()
         self.sp_count.setRange(1, 1000)
-        form.addRow("Batch Count:", self.sp_count)
+        form.addRow("生成数量:", self.sp_count)
 
         # Actions
         btn_layout = QHBoxLayout()
-        self.btn_validate = QPushButton("Validate Config")
-        self.btn_preview = QPushButton("Preview")
-        self.btn_batch = QPushButton("Batch Generate")
+        self.btn_validate = QPushButton("校验配置")
+        self.btn_preview = QPushButton("预览")
+        self.btn_batch = QPushButton("批量生成")
 
         btn_layout.addWidget(self.btn_validate)
         btn_layout.addWidget(self.btn_preview)
@@ -200,7 +288,7 @@ class MainWindow(QMainWindow):
         # Right Panel - Preview
         right_panel = QWidget()
         right_layout = QVBoxLayout(right_panel)
-        self.lbl_preview = QLabel("Preview will appear here.")
+        self.lbl_preview = QLabel("预览将显示在这里。")
         self.lbl_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         scroll_preview = QScrollArea()
@@ -211,9 +299,23 @@ class MainWindow(QMainWindow):
 
         splitter.addWidget(left_panel)
         splitter.addWidget(right_panel)
-        splitter.setSizes([400, 600])
+        splitter.setSizes([450, 550])
 
         self.populate_lists()
+
+    def on_qty_mode_changed(self, text):
+        if text == "固定":
+            self.qty_widget.setCurrentIndex(0)
+        else:
+            self.qty_widget.setCurrentIndex(1)
+
+    def on_time_mode_changed(self, text):
+        if text == "最近":
+            self.time_stack.setCurrentIndex(0)
+        elif text == "固定":
+            self.time_stack.setCurrentIndex(1)
+        else:
+            self.time_stack.setCurrentIndex(2)
 
     def populate_lists(self):
         self.lst_targets.clear()
@@ -222,24 +324,42 @@ class MainWindow(QMainWindow):
             item.setData(Qt.ItemDataRole.UserRole, t.sku_id)
             self.lst_targets.addItem(item)
 
-        self.lst_stores.clear()
-        self.lst_stores.addItem(QListWidgetItem("All"))
-        for s in self.layouts.keys():
-            self.lst_stores.addItem(s)
-
         self.lst_states.clear()
         self.lst_states.addItem(QListWidgetItem("All"))
-        for st in self.tax_rates.keys():
+        for st in sorted(self.tax_rates.keys()):
             self.lst_states.addItem(st)
+
+        self.on_state_selected()
+
+    def on_state_selected(self):
+        selected_states = [i.text() for i in self.lst_states.selectedItems() if i.text() != "All"]
+        self.lst_stores.clear()
+        self.lst_stores.addItem("All")
+
+        for store_id, prof in self.store_profiles.items():
+            if not selected_states: # All states, show all
+                self.lst_stores.addItem(QListWidgetItem(prof.name))
+            else:
+                for st in selected_states:
+                    if st in prof.region_whitelist:
+                        item = QListWidgetItem(prof.name)
+                        item.setData(Qt.ItemDataRole.UserRole, store_id)
+                        self.lst_stores.addItem(item)
+                        break
 
     def get_config(self) -> RebateJobConfig:
         targets = [i.data(Qt.ItemDataRole.UserRole) for i in self.lst_targets.selectedItems()]
         if not targets:
-            raise ValueError("Select at least one target SKU.")
+            raise ValueError("请至少选择一个目标商品。")
 
-        stores = [i.text() for i in self.lst_stores.selectedItems()]
-        if not stores or "All" in stores:
-            stores = None
+        stores = []
+        for i in self.lst_stores.selectedItems():
+            if i.text() == "All":
+                stores = None
+                break
+            else:
+                s_id = i.data(Qt.ItemDataRole.UserRole)
+                if s_id: stores.append(s_id)
 
         states = [i.text() for i in self.lst_states.selectedItems()]
         if not states or "All" in states:
@@ -247,32 +367,43 @@ class MainWindow(QMainWindow):
 
         regs = [r.strip() for r in self.le_registers.text().split(",") if r.strip()]
 
-        return RebateJobConfig(
+        tmode = "recent" if self.cb_time_mode.currentText() == "最近" else ("fixed" if self.cb_time_mode.currentText() == "固定" else "range")
+        qmode = "fixed" if self.cb_qty_mode.currentText() == "固定" else "range"
+        fstrat = "smart" if self.cb_filler_strategy.currentText() == "智能关联" else ("random" if self.cb_filler_strategy.currentText() == "随机" else "none")
+        pmode = "auto" if self.cb_payment.currentText() == "自动" else ("cash" if self.cb_payment.currentText() == "现金" else "card")
+        outformat = "png" if self.cb_output.currentText() == "保存为图片(PNG)" else "direct_print"
+
+        cfg = RebateJobConfig(
             target_skus=targets,
-            target_qty_mode=self.cb_qty_mode.currentText(),
-            target_qty_value=self.sp_qty.value() if self.cb_qty_mode.currentText() == "fixed" else (1, self.sp_qty.value()),
-            filler_strategy=self.cb_filler_strategy.currentText(),
+            target_qty_mode=qmode,
+            target_qty_value=self.sp_qty_fixed.value() if qmode == "fixed" else (self.sp_qty_min.value(), self.sp_qty_max.value()),
+            filler_strategy=fstrat,
             filler_count_range=(self.sp_filler_min.value(), self.sp_filler_max.value()),
             affinity_enforce=self.chk_affinity.isChecked(),
             store_filter=stores,
             state_filter=states,
             register_pool=regs,
-            register_mode=self.cb_reg_mode.currentText(),
+            register_mode="random", # map to UI
             void_ratio=self.sp_void.value(),
             return_ratio=self.sp_return.value(),
-            payment_mode=self.cb_payment.currentText(),
-            output_format=self.cb_output.currentText(),
-            count=self.sp_count.value()
+            payment_mode=pmode,
+            output_format=outformat,
+            count=self.sp_count.value(),
+            time_mode=tmode,
+            time_fixed=self.dt_fixed.dateTime().toPyDateTime().isoformat() if tmode == "fixed" else None,
+            time_range_start=self.dt_start.dateTime().toPyDateTime().isoformat() if tmode == "range" else None,
+            time_range_end=self.dt_end.dateTime().toPyDateTime().isoformat() if tmode == "range" else None
         )
+        return cfg
 
     def validate_config(self):
         try:
             cfg = self.get_config()
-            QMessageBox.information(self, "Valid", "Configuration is valid!")
+            QMessageBox.information(self, "校验通过", "配置有效，随时可以生成！")
         except Exception as e:
-            QMessageBox.warning(self, "Invalid Configuration", str(e))
+            QMessageBox.warning(self, "配置无效", str(e))
 
-    def generate_single(self, config: RebateJobConfig, job_id: str):
+    def generate_single(self, config: RebateJobConfig, job_id: str, prev_time=None):
         cart = self.cart_builder.build_cart(config)
         cart = self.tax_engine.calculate_taxes(cart)
         payment = self.payment_matcher.generate_payment(config, cart)
@@ -285,8 +416,34 @@ class MainWindow(QMainWindow):
 
         txn_seq, ts = self.txn_lock.next_seq(cart.store_id, register_id, job_id)
 
+        # Pick address
+        prof = self.store_profiles.get(cart.store_id)
+        if not prof:
+            raise ValueError(f"缺少商家配置: {cart.store_id}")
+
+        addrs = prof.addresses.get(cart.state_code, [])
+        if not addrs:
+            raise ValueError(f"商家 {prof.name} 在 {cart.state_code} 州不可用")
+
+        addr_dict = random.choice(addrs)
+        address = StoreAddress(**addr_dict)
+
         layout = self.layouts[cart.store_id]
-        ts_str = datetime.fromtimestamp(ts).strftime(layout.footer.time_format)
+
+        # Determine time
+        dt_start = datetime.fromisoformat(config.time_range_start) if config.time_range_start else None
+        dt_end = datetime.fromisoformat(config.time_range_end) if config.time_range_end else None
+        dt_fixed = datetime.fromisoformat(config.time_fixed) if config.time_fixed else None
+
+        base_time = generate_timestamp(config.time_mode, dt_fixed, dt_start, dt_end)
+        if prev_time and config.time_mode != "fixed":
+            # Ensure strictly increasing
+            if base_time <= prev_time:
+                base_time = prev_time + timedelta(seconds=random.randint(60, 1800))
+                if dt_end and base_time > dt_end:
+                    base_time = dt_end - timedelta(seconds=random.randint(1, 10))
+
+        ts_str = base_time.strftime(layout.footer.time_format)
 
         from us_rebate_receipts.src.models.core import ReceiptData
         receipt = ReceiptData(
@@ -295,11 +452,12 @@ class MainWindow(QMainWindow):
             payment=payment,
             register_id=register_id,
             txn_seq=txn_seq,
-            timestamp=ts_str
+            timestamp=ts_str,
+            address=address
         )
 
         PreRenderSanityCheck.verify(receipt.cart, receipt.payment, config.affinity_enforce)
-        return receipt, register_id, txn_seq
+        return receipt, register_id, txn_seq, base_time
 
     def do_preview(self):
         try:
@@ -307,11 +465,10 @@ class MainWindow(QMainWindow):
             config.output_format = "png" # Force PNG for preview
 
             job_id = "PREVIEW-001"
-            receipt, reg_id, seq = self.generate_single(config, job_id)
+            receipt, reg_id, seq, _ = self.generate_single(config, job_id)
 
             img = self.renderer.render_png(receipt)
 
-            # Convert PIL to QPixmap
             import io
             bio = io.BytesIO()
             img.save(bio, format="PNG")
@@ -327,7 +484,7 @@ class MainWindow(QMainWindow):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            QMessageBox.critical(self, "Preview Error", str(e))
+            QMessageBox.critical(self, "预览错误", str(e))
 
     def do_batch(self):
         try:
@@ -339,8 +496,10 @@ class MainWindow(QMainWindow):
             direct_printer = DirectPrinter(batch_dir)
 
             success_count = 0
+            prev_time = None
             for i in range(config.count):
-                receipt, reg_id, seq = self.generate_single(config, job_id)
+                receipt, reg_id, seq, p_time = self.generate_single(config, job_id, prev_time)
+                prev_time = p_time
 
                 if config.output_format == "png":
                     img = self.renderer.render_png(receipt)
@@ -357,12 +516,12 @@ class MainWindow(QMainWindow):
                 self.txn_lock.update_transaction(receipt.cart.store_id, reg_id, seq, float(receipt.cart.total), file_hash)
                 success_count += 1
 
-            QMessageBox.information(self, "Batch Complete", f"Successfully generated {success_count} receipts to {batch_dir}")
+            QMessageBox.information(self, "批量生成完成", f"成功生成 {success_count} 张收据至 {batch_dir}")
 
         except Exception as e:
             import traceback
             traceback.print_exc()
-            QMessageBox.critical(self, "Batch Error", str(e))
+            QMessageBox.critical(self, "批量生成错误", str(e))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
