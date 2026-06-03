@@ -3,7 +3,7 @@ import random
 from typing import List, Optional, Tuple
 from decimal import Decimal, ROUND_HALF_UP
 
-from us_rebate_receipts.src.models.core import (
+from models.core import (
     TargetSKU, GeneralSKU, RebateJobConfig, CartItem, ShoppingCart,
     TaxRate, StoreLayoutConfig, PaymentDetail
 )

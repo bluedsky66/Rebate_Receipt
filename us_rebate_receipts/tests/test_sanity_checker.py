@@ -1,7 +1,7 @@
 import pytest
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import ShoppingCart, PaymentDetail, CartItem, GeneralSKU
-from us_rebate_receipts.src.engine.sanity_checker import PreRenderSanityCheck
+from models.core import ShoppingCart, PaymentDetail, CartItem, GeneralSKU
+from engine.sanity_checker import PreRenderSanityCheck
 
 def create_item(name, price, tags):
     sku = GeneralSKU(sku_id="1", upc="1", name=name, base_price=price, category="X", affinity_tags=tags, weight=1)

@@ -1,7 +1,7 @@
 import pytest
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import ShoppingCart, CartItem, GeneralSKU, TaxRate
-from us_rebate_receipts.src.engine.tax_engine import TaxEngine
+from models.core import ShoppingCart, CartItem, GeneralSKU, TaxRate
+from engine.tax_engine import TaxEngine
 
 @pytest.fixture
 def tax_rates():

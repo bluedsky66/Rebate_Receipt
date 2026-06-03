@@ -40,5 +40,26 @@
         "local_avg": "0.0250",
         "food_exempt": false,
         "split_tax": false
+    },
+    "OH": {
+        "state_code": "OH",
+        "state_rate": "0.05",
+        "local_avg": "0.01",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "WY": {
+        "state_code": "WY",
+        "state_rate": "0.05",
+        "local_avg": "0.01",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "AZ": {
+        "state_code": "AZ",
+        "state_rate": "0.05",
+        "local_avg": "0.01",
+        "food_exempt": true,
+        "split_tax": false
     }
 }

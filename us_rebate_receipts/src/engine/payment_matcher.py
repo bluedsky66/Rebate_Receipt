@@ -1,6 +1,6 @@
 import random
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import RebateJobConfig, ShoppingCart, PaymentDetail
+from models.core import RebateJobConfig, ShoppingCart, PaymentDetail
 
 class PaymentMatcher:
     def __init__(self, layouts: dict):

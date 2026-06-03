@@ -1,7 +1,7 @@
 import pytest
 import sqlite3
 import os
-from us_rebate_receipts.src.engine.txn_lock import RegisterAwareTxnLock
+from engine.txn_lock import RegisterAwareTxnLock
 
 def test_sequence_monotonic():
     db_path = "test_txn.db"

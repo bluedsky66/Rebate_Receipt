@@ -1,7 +1,7 @@
 import pytest
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import ShoppingCart, RebateJobConfig
-from us_rebate_receipts.src.engine.payment_matcher import PaymentMatcher
+from models.core import ShoppingCart, RebateJobConfig
+from engine.payment_matcher import PaymentMatcher
 
 @pytest.fixture
 def layouts():

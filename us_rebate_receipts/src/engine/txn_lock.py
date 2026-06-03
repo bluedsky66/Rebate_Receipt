@@ -4,8 +4,12 @@ import random
 import os
 from typing import Literal, Tuple
 
+from utils.path_helper import get_jobs_dir
+
 class RegisterAwareTxnLock:
-    def __init__(self, db_path: str = "us_rebate_receipts/jobs/txn_registry.db"):
+    def __init__(self, db_path: str = None):
+        if db_path is None:
+            db_path = str(get_jobs_dir() / "txn_registry.db")
         self.db_path = db_path
         self.last_timestamps = {}  # store_id_register_id -> last_timestamp_ms
         self._init_db()

@@ -1,5 +1,5 @@
 from decimal import Decimal, ROUND_HALF_UP
-from us_rebate_receipts.src.models.core import ShoppingCart
+from models.core import ShoppingCart
 
 class TaxEngine:
     def __init__(self, tax_rates: dict, store_tax_profiles: dict):

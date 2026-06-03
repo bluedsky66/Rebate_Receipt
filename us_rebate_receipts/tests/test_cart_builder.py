@@ -1,7 +1,7 @@
 import pytest
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import TargetSKU, GeneralSKU, RebateJobConfig
-from us_rebate_receipts.src.engine.cart_builder import CartBuilder
+from models.core import TargetSKU, GeneralSKU, RebateJobConfig
+from engine.cart_builder import CartBuilder
 
 @pytest.fixture
 def test_skus():

@@ -1,6 +1,6 @@
 from typing import List
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import ShoppingCart, PaymentDetail
+from models.core import ShoppingCart, PaymentDetail
 
 class PreRenderSanityCheck:
     @staticmethod

@@ -1,7 +1,7 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 from decimal import Decimal
-from us_rebate_receipts.src.models.core import ReceiptData, StoreLayoutConfig
+from models.core import ReceiptData, StoreLayoutConfig
 
 class LayoutRenderer:
     def __init__(self, layouts: dict, logo_paths: dict):

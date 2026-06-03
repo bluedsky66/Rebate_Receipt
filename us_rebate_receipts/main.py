@@ -1,32 +1,47 @@
-import json
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+CLI 入口文件
+用法: python main.py
+"""
+
+import sys
 import os
 import random
 import hashlib
 from datetime import datetime
-from us_rebate_receipts.src.models.core import (
-    TargetSKU, GeneralSKU, RebateJobConfig, TaxRate, StoreLayoutConfig, ReceiptData
+from pathlib import Path
+
+# Ensure src is in sys.path
+project_root = Path(__file__).resolve().parent
+sys.path.insert(0, str(project_root / "src"))
+
+from models.core import (
+    TargetSKU, GeneralSKU, RebateJobConfig, TaxRate, StoreLayoutConfig, ReceiptData, StoreProfileConfig
 )
-from us_rebate_receipts.src.engine.cart_builder import CartBuilder
-from us_rebate_receipts.src.engine.tax_engine import TaxEngine
-from us_rebate_receipts.src.engine.payment_matcher import PaymentMatcher
-from us_rebate_receipts.src.engine.txn_lock import RegisterAwareTxnLock
-from us_rebate_receipts.src.engine.sanity_checker import PreRenderSanityCheck
-from us_rebate_receipts.src.engine.renderer import LayoutRenderer
-from us_rebate_receipts.src.printers.printers import PngPrinter, DirectPrinter
+from engine.cart_builder import CartBuilder
+from engine.tax_engine import TaxEngine
+from engine.payment_matcher import PaymentMatcher
+from engine.txn_lock import RegisterAwareTxnLock
+from engine.sanity_checker import PreRenderSanityCheck
+from engine.renderer import LayoutRenderer
+from printers.printers import PngPrinter, DirectPrinter
+from utils.config_loader import ConfigLoader
+from utils.path_helper import get_store_logo_path, get_config_dir
+from utils.output_helper import get_next_batch_dir
 
 # Load configs
 def load_configs_main():
-    with open("us_rebate_receipts/config/target_skus.json") as f:
-        target_skus = [TargetSKU(**t) for t in json.load(f)["target_skus"]]
+    target_data = ConfigLoader.load_json("target_skus.json")
+    target_skus = [TargetSKU(**t) for t in target_data["target_skus"]]
 
-    with open("us_rebate_receipts/config/general_skus.json") as f:
-        general_skus = [GeneralSKU(**g) for g in json.load(f)["general_skus"]]
+    general_data = ConfigLoader.load_json("general_skus.json")
+    general_skus = [GeneralSKU(**g) for g in general_data["general_skus"]]
 
-    with open("us_rebate_receipts/config/tax_rates.json") as f:
-        tax_rates = {k: TaxRate(**v) for k, v in json.load(f).items()}
+    tax_data = ConfigLoader.load_json("tax_rates.json")
+    tax_rates = {k: TaxRate(**v) for k, v in tax_data.items()}
 
-    import glob
-    stores = [os.path.basename(os.path.dirname(p)) for p in glob.glob("us_rebate_receipts/config/stores/*/profile.json")]
+    stores = ConfigLoader.list_stores()
 
     layouts = {}
     tax_profiles = {}
@@ -34,23 +49,20 @@ def load_configs_main():
     store_profiles = {}
 
     for store in stores:
-        from us_rebate_receipts.src.models.core import StoreProfileConfig
-        with open(f"us_rebate_receipts/config/stores/{store}/profile.json") as f:
-            store_profiles[store] = StoreProfileConfig(**json.load(f))
-        with open(f"us_rebate_receipts/config/stores/{store}/layout.json") as f:
-            layouts[store] = StoreLayoutConfig(**json.load(f))
-        with open(f"us_rebate_receipts/config/stores/{store}/tax_profile.json") as f:
-            tax_profiles[store] = json.load(f)
-        logo_paths[store] = f"us_rebate_receipts/config/stores/{store}/logo.png"
+        store_profiles[store] = StoreProfileConfig(**ConfigLoader.load_store_config(store, "profile.json"))
+        layouts[store] = StoreLayoutConfig(**ConfigLoader.load_store_config(store, "layout.json"))
+        tax_profiles[store] = ConfigLoader.load_store_config(store, "tax_profile.json")
+        logo_paths[store] = str(get_store_logo_path(store))
 
     return target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths, store_profiles
 
 import subprocess
-import sys
 
 def main():
-    if not os.path.exists("us_rebate_receipts/config/target_skus.json"):
-        subprocess.run([sys.executable, "refactor_configs.py"], check=True)
+    # Only run setup generator dynamically if running in development mode (not PyInstaller frozen)
+    if not getattr(sys, 'frozen', False):
+        if not (get_config_dir() / "target_skus.json").exists():
+            subprocess.run([sys.executable, str(project_root / "refactor_configs.py")], check=True)
 
     target_skus, general_skus, tax_rates, layouts, tax_profiles, logo_paths, store_profiles = load_configs_main()
 
@@ -72,7 +84,7 @@ def main():
     )
 
     job_id = f"JOB-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    batch_dir = f"us_rebate_receipts/output/{datetime.now().strftime('%Y-%m-%d')}_batch_001"
+    batch_dir = str(get_next_batch_dir())
 
     png_printer = PngPrinter(batch_dir)
     direct_printer = DirectPrinter(batch_dir)
@@ -90,7 +102,7 @@ def main():
         payment = payment_matcher.generate_payment(config, cart)
 
         # Pick address
-        from us_rebate_receipts.src.models.core import StoreAddress
+        from models.core import StoreAddress
         prof = store_profiles.get(cart.store_id)
         addrs = prof.addresses.get(cart.state_code, [])
         address = StoreAddress(**random.choice(addrs)) if addrs else StoreAddress(store_number="000", street="TEST", city="TEST", state="XX", zip="000")
