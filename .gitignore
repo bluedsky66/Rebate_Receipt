@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+us_rebate_receipts/jobs/*.db
+us_rebate_receipts/jobs/*.db-wal
+us_rebate_receipts/jobs/*.db-shm
+us_rebate_receipts/output/
+test_txn*.db
+.coverage
+.pytest_cache/

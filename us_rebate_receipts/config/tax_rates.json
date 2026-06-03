@@ -1,0 +1,44 @@
+{
+    "CA": {
+        "state_code": "CA",
+        "state_rate": "0.0725",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": true
+    },
+    "TX": {
+        "state_code": "TX",
+        "state_rate": "0.0625",
+        "local_avg": "0.0200",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NY": {
+        "state_code": "NY",
+        "state_rate": "0.0400",
+        "local_avg": "0.04875",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "FL": {
+        "state_code": "FL",
+        "state_rate": "0.0600",
+        "local_avg": "0.0100",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "OR": {
+        "state_code": "OR",
+        "state_rate": "0.0000",
+        "local_avg": "0.0000",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "IL": {
+        "state_code": "IL",
+        "state_rate": "0.0625",
+        "local_avg": "0.0250",
+        "food_exempt": false,
+        "split_tax": false
+    }
+}

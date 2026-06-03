@@ -1,0 +1,58 @@
+{
+    "store_id": "target",
+    "page_width_dots": 384,
+    "line_height": 26,
+    "char_spacing": 0,
+    "header": {
+        "alignment": "center",
+        "show_name": true,
+        "show_address": true,
+        "address_template": "123 MAIN ST\nCITY, STATE 12345"
+    },
+    "item_line": {
+        "name_align": "left",
+        "price_align": "right",
+        "price_offset": 0,
+        "qty_template": "{qty} @ {unit_price}",
+        "show_upc": false
+    },
+    "tax_line_format": {
+        "mode": "split",
+        "single_label": "TOTAL TAX",
+        "split_labels": [
+            "STATE TAX",
+            "LOCAL TAX"
+        ],
+        "show_rate": false,
+        "alignment": "right",
+        "separator": " "
+    },
+    "payment_line": {
+        "label": "TENDER",
+        "alignment": "right",
+        "mask_format": "{type} ****{last4}",
+        "cash_label": "CASH",
+        "store_specific": {
+            "walmart_pay": false,
+            "walmart_pay_threshold": "100.00",
+            "costco_visa_only": false
+        }
+    },
+    "total_section": {
+        "subtotal_label": "SUBTOTAL",
+        "tax_label": "TAX",
+        "total_label": "TOTAL",
+        "separator": "--------------------------------"
+    },
+    "footer": {
+        "barcode_type": "CODE39",
+        "terminal_id_format": "TERM {register}",
+        "txn_format": "TC# {store_id} {register} {seq} {timestamp}",
+        "show_time": true,
+        "time_format": "%m/%d/%Y %H:%M:%S"
+    },
+    "custom_escpos": [
+        "\u001b@",
+        "\u001ba\u0001"
+    ]
+}

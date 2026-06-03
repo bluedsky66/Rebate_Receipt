@@ -1,0 +1,1096 @@
+{
+    "general_skus": [
+        {
+            "sku_id": "GSKU-LAUNDRY-001",
+            "upc": "100000000001",
+            "name": "Generic Fabric Softener 1",
+            "base_price": "5.49",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-002",
+            "upc": "100000000002",
+            "name": "Generic Fabric Softener 2",
+            "base_price": "5.99",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-003",
+            "upc": "100000000003",
+            "name": "Generic Fabric Softener 3",
+            "base_price": "6.49",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-004",
+            "upc": "100000000004",
+            "name": "Generic Fabric Softener 4",
+            "base_price": "6.99",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-005",
+            "upc": "100000000005",
+            "name": "Generic Fabric Softener 5",
+            "base_price": "7.49",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-006",
+            "upc": "100000000006",
+            "name": "Generic Fabric Softener 6",
+            "base_price": "7.99",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-007",
+            "upc": "100000000007",
+            "name": "Generic Fabric Softener 7",
+            "base_price": "8.49",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-008",
+            "upc": "100000000008",
+            "name": "Generic Fabric Softener 8",
+            "base_price": "8.99",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-009",
+            "upc": "100000000009",
+            "name": "Generic Fabric Softener 9",
+            "base_price": "9.49",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-LAUNDRY-010",
+            "upc": "100000000010",
+            "name": "Generic Fabric Softener 10",
+            "base_price": "9.99",
+            "category": "Household",
+            "affinity_tags": [
+                "laundry",
+                "fabric_care",
+                "household_cleaning"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-001",
+            "upc": "200000000001",
+            "name": "Generic Baby Wipes 1",
+            "base_price": "3.24",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-002",
+            "upc": "200000000002",
+            "name": "Generic Baby Wipes 2",
+            "base_price": "3.49",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-003",
+            "upc": "200000000003",
+            "name": "Generic Baby Wipes 3",
+            "base_price": "3.74",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-004",
+            "upc": "200000000004",
+            "name": "Generic Baby Wipes 4",
+            "base_price": "3.99",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-005",
+            "upc": "200000000005",
+            "name": "Generic Baby Wipes 5",
+            "base_price": "4.24",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-006",
+            "upc": "200000000006",
+            "name": "Generic Baby Wipes 6",
+            "base_price": "4.49",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-007",
+            "upc": "200000000007",
+            "name": "Generic Baby Wipes 7",
+            "base_price": "4.74",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-008",
+            "upc": "200000000008",
+            "name": "Generic Baby Wipes 8",
+            "base_price": "4.99",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-009",
+            "upc": "200000000009",
+            "name": "Generic Baby Wipes 9",
+            "base_price": "5.24",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-BABY-010",
+            "upc": "200000000010",
+            "name": "Generic Baby Wipes 10",
+            "base_price": "5.49",
+            "category": "Baby Care",
+            "affinity_tags": [
+                "baby_care",
+                "wipes"
+            ],
+            "weight": 50
+        },
+        {
+            "sku_id": "GSKU-SNACK-001",
+            "upc": "300000000001",
+            "name": "Generic Candy Bar 1",
+            "base_price": "1.60",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-002",
+            "upc": "300000000002",
+            "name": "Generic Candy Bar 2",
+            "base_price": "1.70",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-003",
+            "upc": "300000000003",
+            "name": "Generic Candy Bar 3",
+            "base_price": "1.80",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-004",
+            "upc": "300000000004",
+            "name": "Generic Candy Bar 4",
+            "base_price": "1.90",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-005",
+            "upc": "300000000005",
+            "name": "Generic Candy Bar 5",
+            "base_price": "2.00",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-006",
+            "upc": "300000000006",
+            "name": "Generic Candy Bar 6",
+            "base_price": "2.10",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-007",
+            "upc": "300000000007",
+            "name": "Generic Candy Bar 7",
+            "base_price": "2.20",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-008",
+            "upc": "300000000008",
+            "name": "Generic Candy Bar 8",
+            "base_price": "2.30",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-009",
+            "upc": "300000000009",
+            "name": "Generic Candy Bar 9",
+            "base_price": "2.40",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-010",
+            "upc": "300000000010",
+            "name": "Generic Candy Bar 10",
+            "base_price": "2.50",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-011",
+            "upc": "300000000011",
+            "name": "Generic Candy Bar 11",
+            "base_price": "2.60",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-012",
+            "upc": "300000000012",
+            "name": "Generic Candy Bar 12",
+            "base_price": "2.70",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-013",
+            "upc": "300000000013",
+            "name": "Generic Candy Bar 13",
+            "base_price": "2.80",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-SNACK-014",
+            "upc": "300000000014",
+            "name": "Generic Candy Bar 14",
+            "base_price": "2.90",
+            "category": "Snacks",
+            "affinity_tags": [
+                "snacks",
+                "candy"
+            ],
+            "weight": 70
+        },
+        {
+            "sku_id": "GSKU-FOOD-001",
+            "upc": "400000000001",
+            "name": "Generic Frozen Pizza 1",
+            "base_price": "6.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-002",
+            "upc": "400000000002",
+            "name": "Generic Frozen Pizza 2",
+            "base_price": "6.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-003",
+            "upc": "400000000003",
+            "name": "Generic Frozen Pizza 3",
+            "base_price": "7.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-004",
+            "upc": "400000000004",
+            "name": "Generic Frozen Pizza 4",
+            "base_price": "7.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-005",
+            "upc": "400000000005",
+            "name": "Generic Frozen Pizza 5",
+            "base_price": "8.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-006",
+            "upc": "400000000006",
+            "name": "Generic Frozen Pizza 6",
+            "base_price": "8.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-007",
+            "upc": "400000000007",
+            "name": "Generic Frozen Pizza 7",
+            "base_price": "9.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-008",
+            "upc": "400000000008",
+            "name": "Generic Frozen Pizza 8",
+            "base_price": "9.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-009",
+            "upc": "400000000009",
+            "name": "Generic Frozen Pizza 9",
+            "base_price": "10.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-010",
+            "upc": "400000000010",
+            "name": "Generic Frozen Pizza 10",
+            "base_price": "10.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-011",
+            "upc": "400000000011",
+            "name": "Generic Frozen Pizza 11",
+            "base_price": "11.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-012",
+            "upc": "400000000012",
+            "name": "Generic Frozen Pizza 12",
+            "base_price": "11.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-013",
+            "upc": "400000000013",
+            "name": "Generic Frozen Pizza 13",
+            "base_price": "12.49",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-FOOD-014",
+            "upc": "400000000014",
+            "name": "Generic Frozen Pizza 14",
+            "base_price": "12.99",
+            "category": "Frozen",
+            "affinity_tags": [
+                "frozen",
+                "produce",
+                "dairy"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-ELEC-001",
+            "upc": "500000000001",
+            "name": "Generic AA Batteries 1",
+            "base_price": "9.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-002",
+            "upc": "500000000002",
+            "name": "Generic AA Batteries 2",
+            "base_price": "10.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-003",
+            "upc": "500000000003",
+            "name": "Generic AA Batteries 3",
+            "base_price": "11.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-004",
+            "upc": "500000000004",
+            "name": "Generic AA Batteries 4",
+            "base_price": "12.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-005",
+            "upc": "500000000005",
+            "name": "Generic AA Batteries 5",
+            "base_price": "13.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-006",
+            "upc": "500000000006",
+            "name": "Generic AA Batteries 6",
+            "base_price": "14.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-007",
+            "upc": "500000000007",
+            "name": "Generic AA Batteries 7",
+            "base_price": "15.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-008",
+            "upc": "500000000008",
+            "name": "Generic AA Batteries 8",
+            "base_price": "16.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-009",
+            "upc": "500000000009",
+            "name": "Generic AA Batteries 9",
+            "base_price": "17.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-ELEC-010",
+            "upc": "500000000010",
+            "name": "Generic AA Batteries 10",
+            "base_price": "18.99",
+            "category": "Electronics",
+            "affinity_tags": [
+                "electronics",
+                "batteries"
+            ],
+            "weight": 30
+        },
+        {
+            "sku_id": "GSKU-PHARM-001",
+            "upc": "600000000001",
+            "name": "Generic Multivitamin 1",
+            "base_price": "13.49",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-002",
+            "upc": "600000000002",
+            "name": "Generic Multivitamin 2",
+            "base_price": "13.99",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-003",
+            "upc": "600000000003",
+            "name": "Generic Multivitamin 3",
+            "base_price": "14.49",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-004",
+            "upc": "600000000004",
+            "name": "Generic Multivitamin 4",
+            "base_price": "14.99",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-005",
+            "upc": "600000000005",
+            "name": "Generic Multivitamin 5",
+            "base_price": "15.49",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-006",
+            "upc": "600000000006",
+            "name": "Generic Multivitamin 6",
+            "base_price": "15.99",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-007",
+            "upc": "600000000007",
+            "name": "Generic Multivitamin 7",
+            "base_price": "16.49",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-008",
+            "upc": "600000000008",
+            "name": "Generic Multivitamin 8",
+            "base_price": "16.99",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-009",
+            "upc": "600000000009",
+            "name": "Generic Multivitamin 9",
+            "base_price": "17.49",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PHARM-010",
+            "upc": "600000000010",
+            "name": "Generic Multivitamin 10",
+            "base_price": "17.99",
+            "category": "Health",
+            "affinity_tags": [
+                "pharmacy",
+                "health",
+                "vitamins"
+            ],
+            "weight": 40
+        },
+        {
+            "sku_id": "GSKU-PCARE-001",
+            "upc": "700000000001",
+            "name": "Generic Shampoo 1",
+            "base_price": "7.19",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-002",
+            "upc": "700000000002",
+            "name": "Generic Shampoo 2",
+            "base_price": "7.39",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-003",
+            "upc": "700000000003",
+            "name": "Generic Shampoo 3",
+            "base_price": "7.59",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-004",
+            "upc": "700000000004",
+            "name": "Generic Shampoo 4",
+            "base_price": "7.79",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-005",
+            "upc": "700000000005",
+            "name": "Generic Shampoo 5",
+            "base_price": "7.99",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-006",
+            "upc": "700000000006",
+            "name": "Generic Shampoo 6",
+            "base_price": "8.19",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-007",
+            "upc": "700000000007",
+            "name": "Generic Shampoo 7",
+            "base_price": "8.39",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-008",
+            "upc": "700000000008",
+            "name": "Generic Shampoo 8",
+            "base_price": "8.59",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-009",
+            "upc": "700000000009",
+            "name": "Generic Shampoo 9",
+            "base_price": "8.79",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-010",
+            "upc": "700000000010",
+            "name": "Generic Shampoo 10",
+            "base_price": "8.99",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-011",
+            "upc": "700000000011",
+            "name": "Generic Shampoo 11",
+            "base_price": "9.19",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-012",
+            "upc": "700000000012",
+            "name": "Generic Shampoo 12",
+            "base_price": "9.39",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-013",
+            "upc": "700000000013",
+            "name": "Generic Shampoo 13",
+            "base_price": "9.59",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-PCARE-014",
+            "upc": "700000000014",
+            "name": "Generic Shampoo 14",
+            "base_price": "9.79",
+            "category": "Personal Care",
+            "affinity_tags": [
+                "personal_care",
+                "shampoo",
+                "soap"
+            ],
+            "weight": 60
+        },
+        {
+            "sku_id": "GSKU-JEWEL-001",
+            "upc": "800000000001",
+            "name": "Diamond Ring 1",
+            "base_price": "599.99",
+            "category": "Jewelry",
+            "affinity_tags": [
+                "jewelry",
+                "accessories"
+            ],
+            "weight": 5
+        },
+        {
+            "sku_id": "GSKU-JEWEL-002",
+            "upc": "800000000002",
+            "name": "Diamond Ring 2",
+            "base_price": "699.99",
+            "category": "Jewelry",
+            "affinity_tags": [
+                "jewelry",
+                "accessories"
+            ],
+            "weight": 5
+        },
+        {
+            "sku_id": "GSKU-JEWEL-003",
+            "upc": "800000000003",
+            "name": "Diamond Ring 3",
+            "base_price": "799.99",
+            "category": "Jewelry",
+            "affinity_tags": [
+                "jewelry",
+                "accessories"
+            ],
+            "weight": 5
+        },
+        {
+            "sku_id": "GSKU-JEWEL-004",
+            "upc": "800000000004",
+            "name": "Diamond Ring 4",
+            "base_price": "899.99",
+            "category": "Jewelry",
+            "affinity_tags": [
+                "jewelry",
+                "accessories"
+            ],
+            "weight": 5
+        },
+        {
+            "sku_id": "GSKU-JEWEL-005",
+            "upc": "800000000005",
+            "name": "Diamond Ring 5",
+            "base_price": "999.99",
+            "category": "Jewelry",
+            "affinity_tags": [
+                "jewelry",
+                "accessories"
+            ],
+            "weight": 5
+        }
+    ]
+}
