@@ -26,9 +26,13 @@ class PaymentMatcher:
         walmart_pay = layout.payment_line.store_specific.walmart_pay
         wp_threshold = Decimal(layout.payment_line.store_specific.walmart_pay_threshold or "100.00")
 
+        target_redcard = store_id == "target"
+
         if mode == "auto":
             if walmart_pay and amount > wp_threshold and random.random() < 0.40:
                 type_ = "WALMART PAY"
+            elif target_redcard and random.random() < 0.35:
+                type_ = "REDCARD"
             elif amount >= Decimal("50.00"):
                 type_ = random.choice(["VISA", "MC", "AMEX", "DISCOVER"])
             elif amount < Decimal("20.00"):
@@ -44,7 +48,10 @@ class PaymentMatcher:
         elif mode == "cash":
             type_ = "CASH"
         elif mode == "card":
-            type_ = random.choice(["VISA", "MC", "AMEX", "DISCOVER"])
+            if target_redcard and random.random() < 0.35:
+                type_ = "REDCARD"
+            else:
+                type_ = random.choice(["VISA", "MC", "AMEX", "DISCOVER"])
         else:
              type_ = "CASH"
 

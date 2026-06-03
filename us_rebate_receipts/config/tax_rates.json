@@ -1,64 +1,358 @@
 {
+    "AL": {
+        "state_code": "AL",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": false,
+        "split_tax": false
+    },
+    "AK": {
+        "state_code": "AK",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "AZ": {
+        "state_code": "AZ",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "AR": {
+        "state_code": "AR",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
     "CA": {
         "state_code": "CA",
-        "state_rate": "0.0725",
+        "state_rate": "0.0600",
         "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": true
     },
-    "TX": {
-        "state_code": "TX",
-        "state_rate": "0.0625",
-        "local_avg": "0.0200",
+    "CO": {
+        "state_code": "CO",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     },
-    "NY": {
-        "state_code": "NY",
-        "state_rate": "0.0400",
-        "local_avg": "0.04875",
+    "CT": {
+        "state_code": "CT",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "DE": {
+        "state_code": "DE",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     },
     "FL": {
         "state_code": "FL",
         "state_rate": "0.0600",
-        "local_avg": "0.0100",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "GA": {
+        "state_code": "GA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "HI": {
+        "state_code": "HI",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "ID": {
+        "state_code": "ID",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": false,
+        "split_tax": false
+    },
+    "IL": {
+        "state_code": "IL",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "IN": {
+        "state_code": "IN",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "IA": {
+        "state_code": "IA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "KS": {
+        "state_code": "KS",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "KY": {
+        "state_code": "KY",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "LA": {
+        "state_code": "LA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "ME": {
+        "state_code": "ME",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "MD": {
+        "state_code": "MD",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "MA": {
+        "state_code": "MA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "MI": {
+        "state_code": "MI",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "MN": {
+        "state_code": "MN",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "MS": {
+        "state_code": "MS",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "MO": {
+        "state_code": "MO",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": false,
+        "split_tax": false
+    },
+    "MT": {
+        "state_code": "MT",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NE": {
+        "state_code": "NE",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NV": {
+        "state_code": "NV",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NH": {
+        "state_code": "NH",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NJ": {
+        "state_code": "NJ",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NM": {
+        "state_code": "NM",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "NY": {
+        "state_code": "NY",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": true
+    },
+    "NC": {
+        "state_code": "NC",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "ND": {
+        "state_code": "ND",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "OH": {
+        "state_code": "OH",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "OK": {
+        "state_code": "OK",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     },
     "OR": {
         "state_code": "OR",
-        "state_rate": "0.0000",
-        "local_avg": "0.0000",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     },
-    "IL": {
-        "state_code": "IL",
-        "state_rate": "0.0625",
-        "local_avg": "0.0250",
-        "food_exempt": false,
+    "PA": {
+        "state_code": "PA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
         "split_tax": false
     },
-    "OH": {
-        "state_code": "OH",
-        "state_rate": "0.05",
-        "local_avg": "0.01",
+    "RI": {
+        "state_code": "RI",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "SC": {
+        "state_code": "SC",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "SD": {
+        "state_code": "SD",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "TN": {
+        "state_code": "TN",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "TX": {
+        "state_code": "TX",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "UT": {
+        "state_code": "UT",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "VT": {
+        "state_code": "VT",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "VA": {
+        "state_code": "VA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "WA": {
+        "state_code": "WA",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "WV": {
+        "state_code": "WV",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
+        "food_exempt": true,
+        "split_tax": false
+    },
+    "WI": {
+        "state_code": "WI",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     },
     "WY": {
         "state_code": "WY",
-        "state_rate": "0.05",
-        "local_avg": "0.01",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     },
-    "AZ": {
-        "state_code": "AZ",
-        "state_rate": "0.05",
-        "local_avg": "0.01",
+    "DC": {
+        "state_code": "DC",
+        "state_rate": "0.0600",
+        "local_avg": "0.0150",
         "food_exempt": true,
         "split_tax": false
     }

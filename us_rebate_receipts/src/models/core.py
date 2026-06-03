@@ -101,7 +101,7 @@ class ShoppingCart(BaseModel):
     scene_anchor_tags: set[str] = Field(default_factory=set)
 
 class PaymentDetail(BaseModel):
-    type: Literal["CASH", "VISA", "MC", "AMEX", "DISCOVER", "WALMART PAY"]
+    type: Literal["CASH", "VISA", "MC", "AMEX", "DISCOVER", "WALMART PAY", "REDCARD"]
     amount: Decimal
     last4: Optional[str] = None
 

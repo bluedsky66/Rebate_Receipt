@@ -70,6 +70,15 @@ class CartBuilder:
                 is_taxable=True # Overridden by TaxEngine later if needed
             ))
 
+        # Helper: Brand extractor
+        def get_brand(name: str):
+            return name.split(" ")[0].upper()
+
+        brands_count = {}
+        for item in cart_items:
+            b = get_brand(item.sku.name)
+            brands_count[b] = brands_count.get(b, 0) + 1
+
         # Adjust weight for convenience stores
         store_type = "standard"
         if store_id in ["walgreens", "mendez_fuel", "abc_fine_wine", "crown_wine", "discount_drug_mart", "cvs"]:
@@ -90,36 +99,50 @@ class CartBuilder:
             else:
                 scene_pool = self.general_skus
 
+            # Deduplicate items already in targets
+            target_ids = {t.sku.sku_id for t in cart_items}
+            scene_pool = [sku for sku in scene_pool if sku.sku_id not in target_ids]
+
             if config.affinity_enforce and len(scene_pool) < count:
                 raise ValueError(f"场景池商品不足，请扩展通用商品库或降低凑单数量 (需要 {count} 个，只有 {len(scene_pool)} 个)")
 
             # If not enough, pick what we can
             scene_pool = scene_pool or self.general_skus
 
-            weights = []
-            for sku in scene_pool:
-                w = sku.weight
-                if store_type == "convenience":
-                    # bias towards $2-$8 items
-                    if Decimal("2.00") <= sku.base_price <= Decimal("8.00"):
-                        w *= 5
-                weights.append(w)
-
-            # Random choice without replacement (unique SKUs)
             chosen_fillers = []
-            try:
-                # Need to use random.choices with replacement manually or just weighted sample
-                # Since Python doesn't have a weighted random.sample, we do it manually
-                pool_copy = list(scene_pool)
-                weights_copy = list(weights)
-                for _ in range(min(count, len(pool_copy))):
-                    chosen = random.choices(pool_copy, weights=weights_copy, k=1)[0]
-                    chosen_fillers.append(chosen)
-                    idx = pool_copy.index(chosen)
-                    pool_copy.pop(idx)
-                    weights_copy.pop(idx)
-            except Exception:
-                chosen_fillers = []
+
+            # Manual weighted sampling without replacement, enforcing brand limit <= 2
+            pool_copy = list(scene_pool)
+
+            for _ in range(min(count, len(pool_copy))):
+                if not pool_copy: break
+
+                weights_copy = []
+                for sku in pool_copy:
+                    w = sku.weight
+                    if store_type == "convenience" and Decimal("2.00") <= sku.base_price <= Decimal("8.00"):
+                        w *= 5
+
+                    # Penalize or zero out if brand limit reached
+                    b = get_brand(sku.name)
+                    if brands_count.get(b, 0) >= 2:
+                        w = 0
+                    weights_copy.append(w)
+
+                # Filter out those with 0 weight (due to brand limit)
+                valid_pool = [p for i, p in enumerate(pool_copy) if weights_copy[i] > 0]
+                valid_weights = [w for w in weights_copy if w > 0]
+
+                if not valid_pool:
+                    # If we exhausted valid items but still need more, we just break early
+                    break
+
+                chosen = random.choices(valid_pool, weights=valid_weights, k=1)[0]
+                chosen_fillers.append(chosen)
+
+                b = get_brand(chosen.name)
+                brands_count[b] = brands_count.get(b, 0) + 1
+                pool_copy.remove(chosen)
 
             for filler in chosen_fillers:
                 qty = 1

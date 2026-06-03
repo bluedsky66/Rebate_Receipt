@@ -146,8 +146,9 @@ class MainWindow(QMainWindow):
 
         w2 = QWidget()
         l2 = QHBoxLayout(w2); l2.setContentsMargins(0,0,0,0)
+        l2.addWidget(QLabel("最小:"))
         l2.addWidget(self.sp_qty_min)
-        l2.addWidget(QLabel("-"))
+        l2.addWidget(QLabel("最大:"))
         l2.addWidget(self.sp_qty_max)
         self.qty_widget.addWidget(w2)
 
@@ -296,20 +297,25 @@ class MainWindow(QMainWindow):
             self.lst_targets.addItem(item)
 
         self.lst_states.clear()
-        self.lst_states.addItem(QListWidgetItem("All"))
+        self.lst_states.addItem(QListWidgetItem("所有(All)"))
         for st in sorted(self.tax_rates.keys()):
             self.lst_states.addItem(st)
 
         self.on_state_selected()
 
     def on_state_selected(self):
-        selected_states = [i.text() for i in self.lst_states.selectedItems() if i.text() != "All"]
+        selected_states = [i.text() for i in self.lst_states.selectedItems() if i.text() != "所有(All)"]
         self.lst_stores.clear()
-        self.lst_stores.addItem("All")
+        self.lst_stores.addItem("所有(All)")
 
-        for store_id, prof in self.store_profiles.items():
+        # Sort stores by name alphabetically
+        sorted_profiles = sorted(self.store_profiles.items(), key=lambda x: x[1].name)
+
+        for store_id, prof in sorted_profiles:
             if not selected_states:
-                self.lst_stores.addItem(QListWidgetItem(prof.name))
+                item = QListWidgetItem(prof.name)
+                item.setData(Qt.ItemDataRole.UserRole, store_id)
+                self.lst_stores.addItem(item)
             else:
                 for st in selected_states:
                     if st in prof.region_whitelist:
@@ -325,7 +331,7 @@ class MainWindow(QMainWindow):
 
         stores = []
         for i in self.lst_stores.selectedItems():
-            if i.text() == "All":
+            if i.text() == "所有(All)":
                 stores = None
                 break
             else:
@@ -333,7 +339,7 @@ class MainWindow(QMainWindow):
                 if s_id: stores.append(s_id)
 
         states = [i.text() for i in self.lst_states.selectedItems()]
-        if not states or "All" in states:
+        if not states or "所有(All)" in states:
             states = None
 
         regs = [r.strip() for r in self.le_registers.text().split(",") if r.strip()]
